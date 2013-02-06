@@ -1,7 +1,8 @@
 package org.craftedsw.tripservicekata;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 import java.util.Collections;
 import java.util.List;
@@ -10,6 +11,7 @@ import org.craftedsw.tripservicekata.exception.UserNotLoggedInException;
 import org.craftedsw.tripservicekata.trip.Trip;
 import org.craftedsw.tripservicekata.trip.TripService;
 import org.craftedsw.tripservicekata.user.User;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class TripServiceTest {
@@ -39,6 +41,20 @@ public class TripServiceTest {
          FRIEND.addFriend(ANOTHER_USER);
          List<Trip> noTrips = Collections.emptyList();
          expectToSee(noTrips);
+    }
+    
+    @Test @Ignore public void 
+    we_see_the_trips_of_friends() throws Exception {
+        loggedUser = EXISTING_USER;
+        FRIEND.addFriend(loggedUser);
+        Trip trip1 = new Trip();
+        FRIEND.addTrip(trip1);
+        Trip trip2 = new Trip();
+        FRIEND.addTrip(trip2);
+        
+        expectToSee(asList(trip1, trip2));
+        
+        
     }
     
     private void expectToSee(List<Trip> noTrips) throws UserNotLoggedInException {
