@@ -5,17 +5,28 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.*;
 
 import java.util.Collections;
+import java.util.List;
 
 import org.craftedsw.tripservicekata.exception.UserNotLoggedInException;
 import org.craftedsw.tripservicekata.trip.Trip;
 import org.craftedsw.tripservicekata.trip.TripService;
 import org.craftedsw.tripservicekata.user.User;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class TripServiceTest {
+    public class TestableTripService extends TripService {
+        @Override
+        protected List<Trip> findTripsByUser(User user) {
+            return trips;
+        }
+    }
+
+    Trip tripToSingapore = new Trip();
+    List<Trip> trips = asList(tripToSingapore);
     private static final User ME = new User();
     private static final User ANOTHER_USER = new User();
-    TripService tripService = new TripService();
+    TripService tripService = new TestableTripService();
     User user = new User();
 	
     @Test(expected=UserNotLoggedInException.class) public void 
@@ -39,10 +50,7 @@ public class TripServiceTest {
     @Test public void 
     we_see_the_trips_of_friends() throws Exception {
         user.addFriend(ME);
-        Trip tripToSingapore = new Trip();
-        Object trips = asList(tripToSingapore);
         assertThat(tripService.getTripsByUser(user, ME), equalTo(trips)); 
-        
     }
     
     
