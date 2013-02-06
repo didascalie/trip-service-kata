@@ -11,7 +11,6 @@ import org.craftedsw.tripservicekata.exception.UserNotLoggedInException;
 import org.craftedsw.tripservicekata.trip.Trip;
 import org.craftedsw.tripservicekata.trip.TripService;
 import org.craftedsw.tripservicekata.user.User;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class TripServiceTest {
@@ -21,6 +20,7 @@ public class TripServiceTest {
     private static final User EXISTING_USER = new User();
     private static final User ANOTHER_USER = new User();
     TripService tripService = new TestableTripService();
+    public List<Trip> trips;
 	
     @Test(expected=UserNotLoggedInException.class) public void 
     throws_exception_for_guests() throws Exception {
@@ -43,22 +43,22 @@ public class TripServiceTest {
          expectToSee(noTrips);
     }
     
-    @Test @Ignore public void 
+    @Test public void 
     we_see_the_trips_of_friends() throws Exception {
         loggedUser = EXISTING_USER;
         FRIEND.addFriend(loggedUser);
-        Trip trip1 = new Trip();
-        FRIEND.addTrip(trip1);
-        Trip trip2 = new Trip();
-        FRIEND.addTrip(trip2);
+
+        Trip tripToSingapore = new Trip();
+        Trip tripToBahamas = new Trip();
+        trips = asList(tripToSingapore, tripToBahamas);
+        FRIEND.addTrip(tripToSingapore);
+        FRIEND.addTrip(tripToBahamas);
         
-        expectToSee(asList(trip1, trip2));
-        
-        
+        expectToSee(trips);
     }
     
-    private void expectToSee(List<Trip> noTrips) throws UserNotLoggedInException {
-        assertThat(tripService.getTripsByUser(FRIEND), equalTo(noTrips));
+    private void expectToSee(List<Trip> trips) throws UserNotLoggedInException {
+        assertThat(tripService.getTripsByUser(FRIEND), equalTo(trips));
     }
     
     public class TestableTripService extends TripService {
@@ -66,6 +66,11 @@ public class TripServiceTest {
         @Override
         protected User loggedUser() {
             return loggedUser;
+        }
+        
+        @Override
+        public List<Trip> findTripsBy(User user) {
+            return trips;
         }
     }
 }
