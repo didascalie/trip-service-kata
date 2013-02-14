@@ -11,7 +11,7 @@ class TripServiceTest extends PHPUnit_Framework_TestCase {
     private $loggedUser, $anotherUser, $someUser;
 
     protected function setUp() {
-        $this->tripService = $this->getMock('TripService', array('getLoggedUser'));
+        $this->tripService = $this->getMock('TripService', array('getLoggedUser', 'findTripsFor'));
         $this->loggedUser = new User("Fred");
         $this->someUser = new User("Simone");
         $this->anotherUser = new User("Lucile");
@@ -48,14 +48,17 @@ class TripServiceTest extends PHPUnit_Framework_TestCase {
     }
     
     /** @test */
-    public function friends_see_no_trips_if_there_are_none() {
+    public function viewer_sees_trips_if_the_givenUser_is_friends_with_him() {
+        $trips = array(new Trip(), new Trip());
+        $this->tripService->expects($this->any())
+                ->method('findTripsFor')
+                ->will($this->returnValue($trips));
         $this->tripService->expects($this->any())
                 ->method('getLoggedUser')
                 ->will($this->returnValue($this->loggedUser));
         $this->someUser->addFriend($this->loggedUser);
         $tripsByUser = $this->tripService->getTripsByUser($this->someUser);
-        $noTrips = array();
-        $this->assertEquals($noTrips, $tripsByUser);
+        $this->assertEquals($trips, $tripsByUser);
     }
     
    
