@@ -2,21 +2,15 @@
 
 class TripServiceTest extends PHPUnit_Framework_TestCase {
 
-    /**
-     * @var TripService
-     */
-    protected $object;
+    /** @var TripService */
+    private $tripService;
 
     protected function setUp() {
-        $this->object = new TripService;
+        $this->tripService = new TripService;
     }
 
-    /**
-     * @test
-     * @covers TripService::getTripsByUser
-     */
-    public function it_throws_an_exception_if_the_user_is_a_guest() {
-        
+    /** @test */ public function 
+    it_does_something() {
         $this->fail('This test has not been implemented yet.');
     }
 
