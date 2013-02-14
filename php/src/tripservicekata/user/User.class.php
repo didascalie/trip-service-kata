@@ -5,8 +5,10 @@ class User {
         
 	private $friends;
 	
+        private $name;
         
-        public function __construct() {
+        public function __construct($name) {
+            $this->name = $name;
             $this->trips = array();
             $this->friends = array();
         }
