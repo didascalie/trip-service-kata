@@ -8,7 +8,7 @@ class TripServiceTest extends PHPUnit_Framework_TestCase {
     private $tripService;
 
     protected function setUp() {
-        $this->tripService = new TripServiceWODependencies();
+        $this->tripService = $this->getMock('TripService', array('getLoggedUser'));
     }
 
     /**
@@ -17,6 +17,7 @@ class TripServiceTest extends PHPUnit_Framework_TestCase {
      * @covers TripService::getTripsByUser
      */
     public function it_throws_an_exception_if_the_user_is_a_guest() {
+        
         $this->tripService->getTripsByUser(new User());
     }
     
