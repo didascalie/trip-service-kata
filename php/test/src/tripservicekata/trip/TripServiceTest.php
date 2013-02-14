@@ -26,9 +26,7 @@ class TripServiceTest extends PHPUnit_Framework_TestCase {
         $this->tripService->getTripsByUser($this->someUser);
     }
     
-    /**
-     * @test
-     */
+    /** @test */
     public function it_doesnt_return_trips_if_the_given_user_has_no_friends() {
         $this->tripService->expects($this->any())
                 ->method('getLoggedUser')
@@ -37,9 +35,8 @@ class TripServiceTest extends PHPUnit_Framework_TestCase {
         $noTrips = array();
         $this->assertEquals($noTrips, $tripsByUser);
     }
-    /**
-     * @test
-     */
+    
+    /** @test */
     public function it_doesnt_return_trips_if_loggedUser_and_given_user_are_not_friends() {
         $this->tripService->expects($this->any())
                 ->method('getLoggedUser')
@@ -50,5 +47,17 @@ class TripServiceTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($noTrips, $tripsByUser);
     }
     
+    /** @test */
+    public function friends_see_no_trips_if_there_are_none() {
+        $this->tripService->expects($this->any())
+                ->method('getLoggedUser')
+                ->will($this->returnValue($this->loggedUser));
+        $this->someUser->addFriend($this->loggedUser);
+        $tripsByUser = $this->tripService->getTripsByUser($this->someUser);
+        $noTrips = array();
+        $this->assertEquals($noTrips, $tripsByUser);
+    }
+    
+   
 }
 
