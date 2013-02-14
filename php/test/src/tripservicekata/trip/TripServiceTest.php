@@ -13,6 +13,7 @@ class TripServiceTest extends PHPUnit_Framework_TestCase {
     protected function setUp() {
         $this->tripService = $this->getMock('TripService', array('getLoggedUser'));
         $this->loggedUser = new User("Fred");
+        $this->someUser = new User("Simone");
         $this->anotherUser = new User("Lucile");
     }
 
@@ -22,7 +23,7 @@ class TripServiceTest extends PHPUnit_Framework_TestCase {
      * @covers TripService::getTripsByUser
      */
     public function it_throws_an_exception_if_the_user_is_a_guest() {
-        $this->tripService->getTripsByUser(new User("Lucile"));
+        $this->tripService->getTripsByUser($this->someUser);
     }
     
     /**
@@ -32,7 +33,7 @@ class TripServiceTest extends PHPUnit_Framework_TestCase {
         $this->tripService->expects($this->any())
                 ->method('getLoggedUser')
                 ->will($this->returnValue($this->loggedUser));
-        $tripsByUser = $this->tripService->getTripsByUser(new User("Lucile"));
+        $tripsByUser = $this->tripService->getTripsByUser($this->someUser);
         $noTrips = array();
         $this->assertEquals($noTrips, $tripsByUser);
     }
@@ -43,9 +44,8 @@ class TripServiceTest extends PHPUnit_Framework_TestCase {
         $this->tripService->expects($this->any())
                 ->method('getLoggedUser')
                 ->will($this->returnValue($this->loggedUser));
-        $givenUser = new User("Lucile");
-        $givenUser->addFriend($this->anotherUser);
-        $tripsByUser = $this->tripService->getTripsByUser($givenUser);
+        $this->someUser->addFriend($this->anotherUser);
+        $tripsByUser = $this->tripService->getTripsByUser($this->someUser);
         $noTrips = array();
         $this->assertEquals($noTrips, $tripsByUser);
     }
