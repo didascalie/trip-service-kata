@@ -1,26 +1,24 @@
-package org.craftedsw.tripservicekata.user;
+<?php
+class UserSession {
 
-import org.craftedsw.tripservicekata.exception.DependendClassCallDuringUnitTestException;
-
-public class UserSession {
-
-	private static final UserSession userSession = new UserSession();
+	private static $userSession;
 	
-	private UserSession() {
-	}
-	
-	public static UserSession getInstance() {
-		return userSession;
+	public static function getInstance() {
+            if (self::$userSession == null) {
+                self::$userSession = new UserSession();
+            }
+            return self::$userSession;
 	}
 
-	public boolean isUserLoggedIn(User user) {
+	public function isUserLoggedIn(User $user) {
 		throw new DependendClassCallDuringUnitTestException(
 				"UserSession.isUserLoggedIn() should not be called in an unit test");
 	}
 
-	public User getLoggedUser() {
+	public function getLoggedUser() {
 		throw new DependendClassCallDuringUnitTestException(
 				"UserSession.getLoggedUser() should not be called in an unit test");
 	}
 
 }
+?>
