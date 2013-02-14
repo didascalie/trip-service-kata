@@ -17,7 +17,6 @@ class TripServiceTest extends PHPUnit_Framework_TestCase {
      * @covers TripService::getTripsByUser
      */
     public function it_throws_an_exception_if_the_user_is_a_guest() {
-        
         $this->tripService->getTripsByUser(new User());
     }
     
@@ -25,6 +24,12 @@ class TripServiceTest extends PHPUnit_Framework_TestCase {
      * @test
      */
     public function it_doesnt_return_trips_if_the_given_user_has_no_friends() {
+        $this->tripService->expects($this->any())
+                ->method('getLoggedUser')
+                ->will($this->returnValue(new User()));
+        $tripsByUser = $this->tripService->getTripsByUser(new User());
+        $noTrips = array();
+        $this->assertEquals($noTrips, $tripsByUser);
     }
 }
 
