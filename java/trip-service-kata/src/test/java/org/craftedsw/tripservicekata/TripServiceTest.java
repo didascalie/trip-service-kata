@@ -23,34 +23,32 @@ public class TripServiceTest {
 
     private User loggedUser ;
     private List<Trip> trips;
-    private TripService tripService;
      
-    @Before
-    public void initBeforeTest() throws Exception {
-        tripService = new TestableTripService();
-    }
-    
     @Test(expected=UserNotLoggedInException.class) public void 
     throws_exception_for_guests() throws Exception {
+        TripService tripService = new TestableTripService();
         loggedUser = GUEST;
         tripService.getTripsByUser(FRIEND);
     }
     
     @Test public void 
     no_trips_when_the_user_has_no_friends() throws Exception {
+        TripService tripService = new TestableTripService();
         loggedUser = EXISTING_USER;
-        expectToSee(NO_TRIPS);
+        assertThat(tripService.getTripsByUser(FRIEND), equalTo(NO_TRIPS));
     }
 
     @Test public void 
     no_trips_when_were_not_friends_with_the_user() throws Exception {
+        TripService tripService = new TestableTripService();
          loggedUser = EXISTING_USER;
          FRIEND.addFriend(ANOTHER_USER);
-         expectToSee(NO_TRIPS);
+         assertThat(tripService.getTripsByUser(FRIEND), equalTo(NO_TRIPS));
     }
     
     @Test public void 
     we_see_the_trips_of_friends() throws Exception {
+        TripService tripService = new TestableTripService();
         loggedUser = EXISTING_USER;
         FRIEND.addFriend(loggedUser);
 
@@ -60,10 +58,6 @@ public class TripServiceTest {
         FRIEND.addTrip(toBahamas);
         
         trips = asList(toSingapore, toBahamas);
-        expectToSee(trips);
-    }
-    
-    private void expectToSee(List<Trip> trips) throws UserNotLoggedInException {
         assertThat(tripService.getTripsByUser(FRIEND), equalTo(trips));
     }
     
