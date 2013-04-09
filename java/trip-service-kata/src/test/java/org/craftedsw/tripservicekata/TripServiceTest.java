@@ -11,17 +11,25 @@ import org.craftedsw.tripservicekata.exception.UserNotLoggedInException;
 import org.craftedsw.tripservicekata.trip.Trip;
 import org.craftedsw.tripservicekata.trip.TripService;
 import org.craftedsw.tripservicekata.user.User;
+import org.junit.Before;
 import org.junit.Test;
 
 public class TripServiceTest {
-    private User loggedUser ;
     private static final User FRIEND = new User();
     private static final User GUEST = null;
     private static final User EXISTING_USER = new User();
     private static final User ANOTHER_USER = new User();
-    TripService tripService = new TestableTripService();
-    public List<Trip> trips;
-	
+    private static final List<Trip> NO_TRIPS = Collections.emptyList();
+
+    private User loggedUser ;
+    private List<Trip> trips;
+    private TripService tripService;
+     
+    @Before
+    public void initBeforeTest() throws Exception {
+        tripService = new TestableTripService();
+    }
+    
     @Test(expected=UserNotLoggedInException.class) public void 
     throws_exception_for_guests() throws Exception {
         loggedUser = GUEST;
@@ -31,16 +39,14 @@ public class TripServiceTest {
     @Test public void 
     no_trips_when_the_user_has_no_friends() throws Exception {
         loggedUser = EXISTING_USER;
-        List<Trip> noTrips = Collections.emptyList();
-        expectToSee(noTrips);
+        expectToSee(NO_TRIPS);
     }
 
     @Test public void 
     no_trips_when_were_not_friends_with_the_user() throws Exception {
          loggedUser = EXISTING_USER;
          FRIEND.addFriend(ANOTHER_USER);
-         List<Trip> noTrips = Collections.emptyList();
-         expectToSee(noTrips);
+         expectToSee(NO_TRIPS);
     }
     
     @Test public void 
@@ -48,12 +54,12 @@ public class TripServiceTest {
         loggedUser = EXISTING_USER;
         FRIEND.addFriend(loggedUser);
 
-        Trip tripToSingapore = new Trip();
-        Trip tripToBahamas = new Trip();
-        trips = asList(tripToSingapore, tripToBahamas);
-        FRIEND.addTrip(tripToSingapore);
-        FRIEND.addTrip(tripToBahamas);
+        Trip toSingapore = new Trip();
+        Trip toBahamas = new Trip();
+        FRIEND.addTrip(toSingapore);
+        FRIEND.addTrip(toBahamas);
         
+        trips = asList(toSingapore, toBahamas);
         expectToSee(trips);
     }
     
