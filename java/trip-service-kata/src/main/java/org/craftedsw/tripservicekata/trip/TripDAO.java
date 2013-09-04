@@ -15,8 +15,8 @@ public class TripDAO {
 				"TripDAO should not be invoked on an unit test.");
 	}
 
-    public void findTripsBy(User user) {
-        findTripsByUser(user);
+    public List<Trip> findTripsBy(User user) {
+        return findTripsByUser(user);
     }
 	
 }
