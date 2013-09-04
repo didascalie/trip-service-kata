@@ -11,11 +11,10 @@ public class TripService {
 
 	private static final ArrayList<Trip> NO_TRIPS = new ArrayList<Trip>();
 
-    public List<Trip> getTripsByUser(User user) throws UserNotLoggedInException {
-		User loggedUser = getLoggedUser();
-		assertUserIsLogged(loggedUser);
+    public List<Trip> getTripsByUser(User traveller, User viewer) throws UserNotLoggedInException {
+		assertUserIsLogged(viewer);
 		
-		return user.isFriendsWith(loggedUser) ? findTripsByUser(user) : NO_TRIPS;
+		return traveller.isFriendsWith(viewer) ? findTripsByUser(traveller) : NO_TRIPS;
 	}
 
     protected void assertUserIsLogged(User loggedUser) throws UserNotLoggedInException {
@@ -28,8 +27,4 @@ public class TripService {
         return TripDAO.findTripsByUser(user);
     }
 
-    public User getLoggedUser() {
-        return UserSession.getInstance().getLoggedUser();
-    }
-	
 }
