@@ -2,13 +2,14 @@ package org.craftedsw.tripservicekata;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 
 import java.util.List;
 
 import org.craftedsw.tripservicekata.exception.UserNotLoggedInException;
 import org.craftedsw.tripservicekata.trip.Trip;
+import org.craftedsw.tripservicekata.trip.TripDAO;
 import org.craftedsw.tripservicekata.trip.TripService;
 import org.craftedsw.tripservicekata.user.User;
 import org.junit.Test;
@@ -16,12 +17,12 @@ import org.mockito.Mockito;
 
 public class TripServiceTest {
     
-    private static final List<Object> NO_TRIPS = asList();
+    private static final List<Trip> NO_TRIPS = asList();
     private static final User LOGGED_USER = new User();
     private static final User GUEST = null;
     private static final Trip TRIP_TO_BAHAMAS = new Trip();
     private static final Trip TRIP_TO_LONDON = new Trip();
-    TripService service = Mockito.spy(new TripService());
+    TripService service = Mockito.spy(new TripService(mock(TripDAO.class)));
 
     @Test(expected=UserNotLoggedInException.class) public void 
     throws_userNotLoggedInException_when_the_viewer_is_guest() throws Exception {

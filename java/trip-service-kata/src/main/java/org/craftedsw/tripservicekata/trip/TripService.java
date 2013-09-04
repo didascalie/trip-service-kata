@@ -11,6 +11,10 @@ public class TripService {
 
 	private static final ArrayList<Trip> NO_TRIPS = new ArrayList<Trip>();
 
+    public TripService(TripDAO mock) {
+        // TODO Auto-generated constructor stub
+    }
+
     public List<Trip> getTripsByUser(User traveller, User viewer) throws UserNotLoggedInException {
 		assertUserIsLogged(viewer);
 		
