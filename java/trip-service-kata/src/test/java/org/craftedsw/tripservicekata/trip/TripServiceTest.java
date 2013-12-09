@@ -1,14 +1,11 @@
 package org.craftedsw.tripservicekata.trip;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.mock;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import org.craftedsw.tripservicekata.exception.UserNotLoggedInException;
@@ -20,10 +17,10 @@ public class TripServiceTest {
     private static final Trip TO_NICE = new Trip();
     private static final Trip TO_BERLIN = new Trip();
     
-    private static final List<Object> NO_TRIPS = Collections.emptyList();
     protected static final User GUEST = null;
     private static final User REGISTERED_USER = new User();
-    TripService tripService = spy(new TripService());
+    private TripDAO tripDao = mock(TripDAO.class);
+    TripService tripService = new TripService(tripDao);
 
     @Test(expected=UserNotLoggedInException.class)
     public void fails_for_guests() throws Exception {
@@ -43,8 +40,6 @@ public class TripServiceTest {
         User friend = new User();
         friend.addFriend(REGISTERED_USER);
 
-        doReturn(NO_TRIPS).when(tripService).findTripsByUser(friend);
-        
         List<Trip> trips = tripService.getTripsByUser(friend, REGISTERED_USER);
         assertTrue(trips.isEmpty());
     }
@@ -56,7 +51,7 @@ public class TripServiceTest {
         friend.addTrip(TO_NICE);
         friend.addTrip(TO_BERLIN);
         List<Trip> allTrips = Arrays.asList(TO_NICE, TO_BERLIN);
-        doReturn(allTrips).when(tripService).findTripsByUser(friend);
+        doReturn(allTrips).when(tripDao).findTripsBy(friend);
         
         List<Trip> trips = tripService.getTripsByUser(friend, REGISTERED_USER);
         
