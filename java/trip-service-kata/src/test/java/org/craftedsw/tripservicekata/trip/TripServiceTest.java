@@ -27,36 +27,30 @@ public class TripServiceTest {
 
     @Test(expected=UserNotLoggedInException.class)
     public void fails_for_guests() throws Exception {
-        doReturn(GUEST).when(tripService).getLoggedUser();
-        
         User irrelevantUser = null;
-        tripService.getTripsByUser(irrelevantUser );
+        tripService.getTripsByUser(irrelevantUser, GUEST);
     }
     
     @Test public void 
     logged_user_cant_see_trips_of_strangers() throws Exception {
-         doReturn(REGISTERED_USER).when(tripService).getLoggedUser();
-         
          User stranger = new User();
-         List<Trip> trips = tripService.getTripsByUser(stranger );
+         List<Trip> trips = tripService.getTripsByUser(stranger, REGISTERED_USER );
          assertTrue(trips.isEmpty());
     }
     
     @Test public void 
     logged_user_cant_see_any_trips_if_there_are_none() throws Exception {
-        doReturn(REGISTERED_USER).when(tripService).getLoggedUser();
         User friend = new User();
         friend.addFriend(REGISTERED_USER);
 
         doReturn(NO_TRIPS).when(tripService).findTripsByUser(friend);
         
-        List<Trip> trips = tripService.getTripsByUser(friend);
+        List<Trip> trips = tripService.getTripsByUser(friend, REGISTERED_USER);
         assertTrue(trips.isEmpty());
     }
     
     @Test public void 
     logged_users_sees_trips_of_his_friends() throws Exception {
-        doReturn(REGISTERED_USER).when(tripService).getLoggedUser();
         User friend = new User();
         friend.addFriend(REGISTERED_USER);
         friend.addTrip(TO_NICE);
@@ -64,7 +58,7 @@ public class TripServiceTest {
         List<Trip> allTrips = Arrays.asList(TO_NICE, TO_BERLIN);
         doReturn(allTrips).when(tripService).findTripsByUser(friend);
         
-        List<Trip> trips = tripService.getTripsByUser(friend);
+        List<Trip> trips = tripService.getTripsByUser(friend, REGISTERED_USER);
         
         assertEquals(allTrips, trips);
     }
