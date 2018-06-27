@@ -8,8 +8,8 @@ module.exports = class User {
         this.friends = [];
     }
 
-    isFriendsWith(loggedUser) {
-        return this.friends.indexOf(loggedUser) > -1;
+    isFriendsWith(user) {
+        return this.friends.indexOf(user) > -1;
     }
 
     getTrips() {

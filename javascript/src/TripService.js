@@ -3,14 +3,18 @@
 let UserSession = require('./UserSession');
 let TripDAO = require('./TripDAO');
 
+
 class TripService {
 
-    getTripsByUser(user) {
-        let loggedUser = this.getLoggedUser();
-        this.assertNotGuest(loggedUser);
+    constructor(tripDao) {
+        this.tripDao = tripDao;
 
-        let noTrips = [];
-        return user.isFriendsWith(loggedUser) ? this.findTripsBy(user) : noTrips;
+    }
+
+    getTripsByUser(user, loggedUser) {
+        this.assertNotGuest(loggedUser)
+        const NO_TRIPS = [];
+        return user.isFriendsWith(loggedUser) ? this.tripDao.findTripsByUser(user) : NO_TRIPS;
     }
 
     assertNotGuest(loggedUser) {
@@ -19,14 +23,6 @@ class TripService {
         }
     }
 
-    findTripsBy(user) {
-        return TripDAO.findTripsByUser(user);
-    }
-
-    getLoggedUser() {
-        let loggedUser = UserSession.getLoggedUser();
-        return loggedUser;
-    }
 }
 
 module.exports = TripService
