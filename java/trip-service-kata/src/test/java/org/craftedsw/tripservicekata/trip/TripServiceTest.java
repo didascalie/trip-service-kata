@@ -50,7 +50,7 @@ public class TripServiceTest {
     public void viewerCanSeeTripsWhenFriendsWithTraveler() throws Exception {
         Mockito.doReturn(viewer).when(tripService).getLoggedUser();
         List<Trip> trips = Arrays.asList(CORSE, ROME);
-        Mockito.doReturn(trips).when(tripService).getTripsByUser(traveler);
+        Mockito.doReturn(trips).when(tripService).findTripsByUser(traveler);
 
         traveler.addFriend(viewer);
 
