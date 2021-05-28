@@ -15,7 +15,7 @@ public class TripServiceTest {
     private static final Trip ROME = new Trip();
     private static final Trip CORSE = new Trip();
     TripService tripService = Mockito.spy(new TripService());
-    Object guest = null;
+    User guest = null;
     User viewer = new User();
     User traveler = new User();
 
@@ -24,37 +24,34 @@ public class TripServiceTest {
         Mockito.doReturn(guest).when(tripService).getLoggedUser();
 
         User notImportant = null;
-        tripService.getTripsByUser(notImportant);
+        tripService.getTripsByUser(notImportant, guest);
     }
 
     @Test
     public void viewerCantSeeTripsWhenTravelerHasNoFriends() throws Exception {
-        Mockito.doReturn(viewer).when(tripService).getLoggedUser();
 
-        List<Trip> trips = tripService.getTripsByUser(traveler);
+        List<Trip> trips = tripService.getTripsByUser(traveler, viewer);
 
         Assertions.assertThat(trips).isEmpty();
     }
 
     @Test
     public void viewerCantSeeTripsOfTravelersHeIsNotFriendsWith() throws Exception {
-        Mockito.doReturn(viewer).when(tripService).getLoggedUser();
         traveler.addFriend(new User());
 
-        List<Trip> trips = tripService.getTripsByUser(traveler);
+        List<Trip> trips = tripService.getTripsByUser(traveler, viewer);
 
         Assertions.assertThat(trips).isEmpty();
     }
 
     @Test
     public void viewerCanSeeTripsWhenFriendsWithTraveler() throws Exception {
-        Mockito.doReturn(viewer).when(tripService).getLoggedUser();
         List<Trip> trips = Arrays.asList(CORSE, ROME);
         Mockito.doReturn(trips).when(tripService).findTripsByUser(traveler);
 
         traveler.addFriend(viewer);
 
-        List<Trip> visibleTrips = tripService.getTripsByUser(traveler);
+        List<Trip> visibleTrips = tripService.getTripsByUser(traveler, viewer);
 
         Assertions.assertThat(visibleTrips).isEqualTo(trips);
 
